@@ -128,6 +128,18 @@ public class PlaybackManager {
                         mApplicationContext.getPackageName()), null));
     }
 
+    public void resume() {
+        if (mSimpleExoPlayer != null) {
+            mSimpleExoPlayer.setPlayWhenReady(true);
+        }
+    }
+
+    public void pause() {
+        if (mSimpleExoPlayer != null) {
+            mSimpleExoPlayer.setPlayWhenReady(false);
+        }
+    }
+
     private class MyEventListener implements ExtractorMediaSource.EventListener,
             AdaptiveMediaSourceEventListener {
 
