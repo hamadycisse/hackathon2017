@@ -45,8 +45,8 @@
     <FrameLayout
         android:id="@+id/mini_controller_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"></FrameLayout>
 
 
     <android.support.design.widget.FloatingActionButton

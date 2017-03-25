@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/exo_media_button_height"
-    android:layout_gravity="bottom"
     android:orientation="horizontal"
     android:weightSum="1">
 
