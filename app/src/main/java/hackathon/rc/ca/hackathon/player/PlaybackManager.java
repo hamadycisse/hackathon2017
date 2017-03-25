@@ -72,8 +72,8 @@ public class PlaybackManager {
                             new DefaultTrackSelector(), new DefaultLoadControl());
         }
 
-        if (mSimpleExoPlayer == null) {
-            mSimpleExoPlayer = ExoPlayerFactory
+        if (mTrackInfoPlayer == null) {
+            mTrackInfoPlayer = ExoPlayerFactory
                     .newSimpleInstance(mApplicationContext,
                             new DefaultTrackSelector(), new DefaultLoadControl());
         }

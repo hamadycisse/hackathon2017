@@ -22,6 +22,6 @@ public interface ValidationMediaApiServiceInterface {
             "Authorization: Client-Key 31e51cda-4ab0-4234-83c2-25d503c69487"
     })
     @GET("/ValidationMedia/v1/Validation" +
-            ".html?appCode=medianet&deviceType=android4&++connectionType=wifi&output=json")
+            ".html?appCode=medianet&deviceType=android4&connectionType=wifi&output=json")
     Call<ValidationMedia> getMediaUrl(@Query("idMedia") final String idMedia);
 }
