@@ -24,8 +24,15 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
+import bolts.Continuation;
+import bolts.Task;
+import hackathon.rc.ca.hackathon.client.ValidationMediaApiServiceInterface;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
+import hackathon.rc.ca.hackathon.dtos.ValidationMedia;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by Hamady Cissé on 2017-03-25.
@@ -40,14 +47,20 @@ import hackathon.rc.ca.hackathon.dtos.Playlist;
 public class PlaybackManager {
 
     private final Context mApplicationContext;
+    private final ValidationMediaApiServiceInterface mValidationMediaApiService;
     private final Handler mMainHandler;
     private final MyEventListener mEventListener;
 
     private SimpleExoPlayer mSimpleExoPlayer;
+    private SimpleExoPlayer mTrackInfoPlayer;
 
-    public PlaybackManager(final Context applicationContext) {
+    private PlaylistManager mPlaylistManager;
+
+    public PlaybackManager(final Context applicationContext,
+                           final ValidationMediaApiServiceInterface validationMediaApiService) {
 
         mApplicationContext = applicationContext;
+        mValidationMediaApiService = validationMediaApiService;
         mMainHandler = new Handler(Looper.getMainLooper());
         mEventListener = new MyEventListener();
     }
@@ -59,10 +72,39 @@ public class PlaybackManager {
                             new DefaultTrackSelector(), new DefaultLoadControl());
         }
 
-        MediaSource mediaSource = buildMediaSource(Uri.parse("https://archive" +
+        if (mTrackInfoPlayer == null) {
+            mTrackInfoPlayer = ExoPlayerFactory
+                    .newSimpleInstance(mApplicationContext,
+                            new DefaultTrackSelector(), new DefaultLoadControl());
+        }
+
+        mPlaylistManager = new PlaylistManager(playlist.getItems());
+
+        Task.callInBackground(new Callable<ValidationMedia>() {
+            @Override
+            public ValidationMedia call() throws Exception {
+                final Call<ValidationMedia> mediaUrlCall = mValidationMediaApiService.getMediaUrl(playlist.getItems().get(0)
+                        .getSummaryMultimediaItem().getFutureId());
+                final Response<ValidationMedia> mediaUrl = mediaUrlCall.execute();
+                return mediaUrl.body();
+            }
+        }).continueWith(new Continuation<ValidationMedia, Void>() {
+            @Override
+            public Void then(final Task<ValidationMedia> task) throws Exception {
+                if (task.isFaulted()) {
+                    throw new RuntimeException(task.getError().getMessage());
+                }
+                MediaSource mediaSource = buildMediaSource(Uri.parse(task.getResult().getUrl()), "");
+                mSimpleExoPlayer.prepare(mediaSource);
+                mSimpleExoPlayer.setPlayWhenReady(true);
+
+                MediaSource infoMediaSource = buildMediaSource(Uri.parse("https://archive" +
                         ".org/download/testmp3testfile/mpthreetest.mp3"), "");
-        mSimpleExoPlayer.prepare(mediaSource);
-        mSimpleExoPlayer.setPlayWhenReady(true);
+                mTrackInfoPlayer.prepare(mediaSource);
+                mTrackInfoPlayer.setPlayWhenReady(true);
+                return null;
+            }
+        }, Task.UI_THREAD_EXECUTOR);
     }
 
     private MediaSource buildMediaSource(Uri uri, String overrideExtension) {

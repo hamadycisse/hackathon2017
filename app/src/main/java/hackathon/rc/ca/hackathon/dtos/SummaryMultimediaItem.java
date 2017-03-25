@@ -1,5 +1,8 @@
 package hackathon.rc.ca.hackathon.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SummaryMultimediaItem {
 
     private String item;
