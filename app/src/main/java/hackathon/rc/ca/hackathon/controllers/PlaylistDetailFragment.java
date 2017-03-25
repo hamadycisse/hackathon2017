@@ -18,6 +18,7 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
@@ -88,7 +89,7 @@ public class PlaylistDetailFragment extends Fragment {
             Task.callInBackground(new Callable<Playlist>() {
                 @Override
                 public Playlist call() throws Exception {
-                    final Call<Playlist> playlistCall = ((App) activity.getApplication())
+                    final Call<Playlist> playlistCall = getApp()
                             .getNeuroApiService()
                             .getPlaylist(itemId);
                     return playlistCall.execute().body();
@@ -117,5 +118,15 @@ public class PlaylistDetailFragment extends Fragment {
                 }
             }, Task.UI_THREAD_EXECUTOR);
         }
+    }
+
+    private App getApp() {
+        return (App) getActivity().getApplication();
+    }
+
+    @OnClick(R.id.playlist_detail)
+    public void onPlay() {
+
+        getApp().getPlaybackManager().play(mPlaylist);
     }
 }
