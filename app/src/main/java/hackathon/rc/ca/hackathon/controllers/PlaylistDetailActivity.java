@@ -72,7 +72,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
 
             MiniControllerFragment miniControllerFragment = new MiniControllerFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mini_controller_container, fragment)
+                    .add(R.id.mini_controller_container, miniControllerFragment)
                     .commit();
         }
     }
