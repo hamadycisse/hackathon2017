@@ -40,6 +40,8 @@ public class MiniControllerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
+        seekBar = (SeekBar) findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progress = 0;
 
@@ -58,6 +60,7 @@ public class MiniControllerFragment extends Fragment {
 
             }
         });
+        */
     }
 
     @Override
