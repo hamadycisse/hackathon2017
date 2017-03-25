@@ -72,11 +72,11 @@ public class PlaybackManager {
                             new DefaultTrackSelector(), new DefaultLoadControl());
         }
 
-        if (mTrackInfoPlayer == null) {
-            mTrackInfoPlayer = ExoPlayerFactory
-                    .newSimpleInstance(mApplicationContext,
-                            new DefaultTrackSelector(), new DefaultLoadControl());
-        }
+//        if (mTrackInfoPlayer == null) {
+//            mTrackInfoPlayer = ExoPlayerFactory
+//                    .newSimpleInstance(mApplicationContext,
+//                            new DefaultTrackSelector(), new DefaultLoadControl());
+//        }
 
         mPlaylistManager = new PlaylistManager(playlist.getItems());
 
@@ -98,10 +98,10 @@ public class PlaybackManager {
                 mSimpleExoPlayer.prepare(mediaSource);
                 mSimpleExoPlayer.setPlayWhenReady(true);
 
-                MediaSource infoMediaSource = buildMediaSource(Uri.parse("https://archive" +
-                        ".org/download/testmp3testfile/mpthreetest.mp3"), "");
-                mTrackInfoPlayer.prepare(mediaSource);
-                mTrackInfoPlayer.setPlayWhenReady(true);
+//                MediaSource infoMediaSource = buildMediaSource(Uri.parse("https://archive" +
+//                        ".org/download/testmp3testfile/mpthreetest.mp3"), "");
+//                mTrackInfoPlayer.prepare(mediaSource);
+//                mTrackInfoPlayer.setPlayWhenReady(true);
                 return null;
             }
         }, Task.UI_THREAD_EXECUTOR);
