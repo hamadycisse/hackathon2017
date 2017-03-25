@@ -5,14 +5,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
-import hackathon.rc.ca.hackathon.dtos.Playlist;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,8 +23,11 @@ import hackathon.rc.ca.hackathon.dtos.Playlist;
  */
 public class MiniControllerFragment extends Fragment {
 
-    private SeekBar seekBar;
-    private TextView titleTV;
+    private Unbinder mUnbinder;
+
+
+    @BindView(R.id.Play) ImageButton mPlayButton;
+    @BindView(R.id.Pause) ImageButton mPauseButton;
 
     public MiniControllerFragment() {
         // Required empty public constructor
@@ -40,32 +44,21 @@ public class MiniControllerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-        seekBar = (SeekBar) findViewById(R.id.seekbar);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int progress = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progresValue, boolean fromUser) {
-                progress = progresValue;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        */
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.mini_controller, container, false);
+        View view =  inflater.inflate(R.layout.mini_controller, container, false);
+        mUnbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
+        }
     }
 
     @Override
@@ -78,13 +71,14 @@ public class MiniControllerFragment extends Fragment {
     }
 
     @OnClick(R.id.Play)
-    public void onPlayButton() {
+    public void onPlay() {
         getApp().getPlaybackManager().resume();
-
+        mPlayButton.setVisibility(View.INVISIBLE);
     }
 
     @OnClick(R.id.Pause)
-    public void onPauseButton() {
+    public void onPaused() {
         getApp().getPlaybackManager().pause();
+        mPlayButton.setVisibility(View.VISIBLE);
     }
 }
