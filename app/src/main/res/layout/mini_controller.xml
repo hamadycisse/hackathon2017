@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/exo_media_button_height"
+    android:layout_gravity="bottom"
     android:orientation="horizontal"
     android:weightSum="1">
 
@@ -62,9 +63,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/fab_margin"
                 android:contentDescription="element_title"
-                android:scrollHorizontally="true"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:scrollHorizontally="true"
                 android:text="Titre de l'élément blahhhhhhhhhhh hhh hhhhhhh hhhhhhh hhhhh" />
         </LinearLayout>
 
@@ -77,16 +78,16 @@
     </LinearLayout>
 
     <!--<FrameLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1">-->
 
-        <!--<ExpandableListView-->
-            <!--android:id="@+id/list_number"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:entries="1 2 3 4 5" />-->
+    <!--<ExpandableListView-->
+    <!--android:id="@+id/list_number"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:entries="1 2 3 4 5" />-->
     <!--</FrameLayout>-->
 
 </LinearLayout>

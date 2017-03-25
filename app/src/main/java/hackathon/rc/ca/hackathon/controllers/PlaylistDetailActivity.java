@@ -70,9 +70,11 @@ public class PlaylistDetailActivity extends AppCompatActivity {
                     .add(R.id.playlist_detail_container, fragment)
                     .commit();
 
+            MiniControllerFragment miniControllerFragment = new MiniControllerFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.mini_controller_container, fragment)
+                    .commit();
         }
-
-
     }
 
     @Override
