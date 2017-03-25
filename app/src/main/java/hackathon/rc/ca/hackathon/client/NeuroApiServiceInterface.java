@@ -16,5 +16,5 @@ import retrofit2.http.Path;
 public interface NeuroApiServiceInterface {
 
     @GET("/neuro/v1/playlists/{id}")
-    Call<List<>> listRepos(@Path("id") String id);
+    Call<List<Playlist>> listRepos(@Path("id") String id);
 }
