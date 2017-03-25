@@ -9,5 +9,5 @@
                                         android:layout_marginLeft="16dp"
                                         android:layout_marginRight="16dp"
                                         app:layoutManager="LinearLayoutManager"
-                                        tools:context="hackathon.rc.ca.hackathon.PlaylistListActivity"
+                                        tools:context="hackathon.rc.ca.hackathon.controllers.PlaylistListActivity"
                                         tools:listitem="@layout/playlist_list_content"/>

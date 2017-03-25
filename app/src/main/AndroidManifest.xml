@@ -3,13 +3,14 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
+        android:name="App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".PlaylistListActivity"
+            android:name=".controllers.PlaylistListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -19,13 +20,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlaylistDetailActivity"
+            android:name=".controllers.PlaylistDetailActivity"
             android:label="@string/title_playlist_detail"
-            android:parentActivityName=".PlaylistListActivity"
+            android:parentActivityName=".controllers.PlaylistListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="hackathon.rc.ca.hackathon.PlaylistListActivity"/>
+                android:value="hackathon.rc.ca.hackathon.controllers.PlaylistListActivity"/>
         </activity>
     </application>
 

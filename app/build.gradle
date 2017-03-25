@@ -42,4 +42,7 @@ dependencies {
     //Taches asynchrones
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
 
+    //Appels réseaux
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+
 }

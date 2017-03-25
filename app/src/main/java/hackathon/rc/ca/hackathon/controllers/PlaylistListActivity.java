@@ -1,4 +1,4 @@
-package hackathon.rc.ca.hackathon;
+package hackathon.rc.ca.hackathon.controllers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dummy.DummyContent;
 
 import java.util.List;

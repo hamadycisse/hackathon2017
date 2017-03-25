@@ -1,4 +1,4 @@
-package hackathon.rc.ca.hackathon;
+package hackathon.rc.ca.hackathon.controllers;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dummy.DummyContent;
 
 /**
