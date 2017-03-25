@@ -107,7 +107,7 @@ public class PlaylistListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, PlaylistDetailActivity.class);
-                        intent.putExtra(PlaylistDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(PlaylistDetailFragment.ARG_ITEM_ID, "91549");
 
                         context.startActivity(intent);
                     }
