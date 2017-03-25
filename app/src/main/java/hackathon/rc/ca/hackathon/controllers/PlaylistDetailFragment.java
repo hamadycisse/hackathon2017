@@ -1,16 +1,28 @@
 package hackathon.rc.ca.hackathon.controllers;
 
 import android.app.Activity;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.concurrent.Callable;
+
+import bolts.Continuation;
+import bolts.Task;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
-import hackathon.rc.ca.hackathon.dummy.DummyContent;
+import hackathon.rc.ca.hackathon.dtos.Playlist;
+import retrofit2.Call;
 
 /**
  * A fragment representing a single Playlist detail screen.
@@ -19,6 +31,12 @@ import hackathon.rc.ca.hackathon.dummy.DummyContent;
  * on handsets.
  */
 public class PlaylistDetailFragment extends Fragment {
+
+
+    private Unbinder mUnbinder;
+
+    @BindView(R.id.playlist_detail) TextView mSummaryText;
+
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -28,7 +46,7 @@ public class PlaylistDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
+    private Playlist mPlaylist;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -41,30 +59,63 @@ public class PlaylistDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
-            }
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.playlist_detail, container, false);
+        final View view = inflater.inflate(R.layout.playlist_detail, container, false);
+        mUnbinder = ButterKnife.bind(this, view);
+        return view;
+    }
 
-        // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.playlist_detail)).setText(mItem.details);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
         }
+    }
 
-        return rootView;
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        final Activity activity = this.getActivity();
+        if (getArguments().containsKey(ARG_ITEM_ID)) {
+
+            final String itemId = getArguments().getString(PlaylistDetailFragment.ARG_ITEM_ID);
+            Task.callInBackground(new Callable<Playlist>() {
+                @Override
+                public Playlist call() throws Exception {
+                    final Call<Playlist> playlistCall = ((App) activity.getApplication())
+                            .getNeuroApiService()
+                            .getPlaylist(itemId);
+                    return playlistCall.execute().body();
+                }
+            }).continueWith(new Continuation<Playlist, Void>() {
+                @Override
+                public Void then(final Task<Playlist> task) throws Exception {
+
+                    if (task.isFaulted()) {
+                        Snackbar.make(getView(), "Une erreur s'est produite: " + task.getError()
+                                .getMessage(), Snackbar.LENGTH_LONG).show();
+                        return null;
+                    }
+                    mPlaylist = task.getResult();
+
+                    CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+                    if (appBarLayout != null) {
+                        appBarLayout.setTitle(mPlaylist.getTitle());
+                    }
+
+                    // Show the dummy content as text in a TextView.
+                    if (mPlaylist != null) {
+                        mSummaryText.setText(Html.fromHtml(mPlaylist.getSummary()));
+                    }
+                    return null;
+                }
+            }, Task.UI_THREAD_EXECUTOR);
+        }
     }
 }

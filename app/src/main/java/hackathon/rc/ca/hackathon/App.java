@@ -2,6 +2,12 @@ package hackathon.rc.ca.hackathon;
 
 import android.app.Application;
 
+import com.fasterxml.jackson.core.JsonFactory;
+
+import hackathon.rc.ca.hackathon.client.NeuroApiServiceInterface;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
+
 /**
  * Created by Hamady Cissé on 2017-03-25.
  * Responsibilities:       The root class of the Application
@@ -13,4 +19,21 @@ import android.app.Application;
  */
 
 public class App extends Application {
+
+    private NeuroApiServiceInterface mNeuroApiService;
+    public NeuroApiServiceInterface getNeuroApiService() {
+        return mNeuroApiService;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://services.radio-canada.ca/hackathon2017/")
+                .addConverterFactory(JacksonConverterFactory.create())
+                .build();
+
+        mNeuroApiService = retrofit.create(NeuroApiServiceInterface.class);
+    }
 }

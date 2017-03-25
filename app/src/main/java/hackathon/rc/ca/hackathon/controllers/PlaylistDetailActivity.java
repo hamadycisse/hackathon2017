@@ -10,7 +10,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import bolts.Task;
+import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
+import hackathon.rc.ca.hackathon.dtos.Playlist;
+import retrofit2.Call;
 
 /**
  * An activity representing a single Playlist detail screen. This
@@ -62,7 +69,10 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.playlist_detail_container, fragment)
                     .commit();
+
         }
+
+
     }
 
     @Override

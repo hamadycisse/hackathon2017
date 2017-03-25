@@ -1,6 +1,11 @@
 package hackathon.rc.ca.hackathon.client;
 
+import java.util.List;
+
+import hackathon.rc.ca.hackathon.dtos.Playlist;
+import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
 /**
@@ -15,6 +20,9 @@ import retrofit2.http.Path;
 
 public interface NeuroApiServiceInterface {
 
+    @Headers({
+            "Authorization: Client-Key 31e51cda-4ab0-4234-83c2-25d503c69487"
+    })
     @GET("/neuro/v1/playlists/{id}")
-    Call<List<Playlist>> listRepos(@Path("id") String id);
+    Call<Playlist> getPlaylist(@Path("id") String id);
 }
