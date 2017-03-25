@@ -28,24 +28,24 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.39"
-        android:orientation="horizontal">
+        android:layout_height="31dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/list_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="219dp"
+            android:layout_height="match_parent"
 
             android:text="titre_liste"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:layout_weight="0.97" />
 
         <TextView
             android:id="@+id/number_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="number_total" />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="number_element" />
 
     </LinearLayout>
 
@@ -53,20 +53,22 @@
         android:id="@+id/seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/text_margin"
-        android:layout_weight="0.02" />
+        android:layout_marginBottom="@dimen/text_margin" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_weight="1"
+        android:gravity="bottom"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginstart="4dp"
-            android:layout_marginend="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="4dp"
             android:layout_weight="1"
             app:srcCompat="@drawable/exo_controls_previous" />
 
@@ -74,15 +76,16 @@
             android:id="@+id/xxs_backward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:scaleX="-1"
             app:srcCompat="@android:drawable/ic_menu_rotate" />
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_weight="1">
@@ -106,8 +109,8 @@
             android:id="@+id/xxs_foward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="6dp"
             android:layout_weight="1"
             app:srcCompat="@android:drawable/ic_menu_rotate" />
 
@@ -115,9 +118,9 @@
             android:id="@+id/next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginstart="8dp"
-            android:layout_marginend="4dp"
 
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="8dp"
             app:srcCompat="@drawable/exo_controls_next" />
 
     </LinearLayout>
