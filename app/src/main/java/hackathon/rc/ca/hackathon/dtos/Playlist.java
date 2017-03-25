@@ -2,6 +2,8 @@ package hackathon.rc.ca.hackathon.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
+
 /**
  * Created by Portable on 2017-03-25.
  */
@@ -36,4 +38,14 @@ public class Playlist {
         this.summary = summary;
     }
 
+    private ArrayList<PlaylistItem> items = new ArrayList<>();
+
+
+    public ArrayList<PlaylistItem> getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList<PlaylistItem> items) {
+        this.items = items;
+    }
 }
