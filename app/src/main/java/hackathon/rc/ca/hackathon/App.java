@@ -5,6 +5,7 @@ import android.app.Application;
 import com.fasterxml.jackson.core.JsonFactory;
 
 import hackathon.rc.ca.hackathon.client.NeuroApiServiceInterface;
+import hackathon.rc.ca.hackathon.client.ValidationMediaApiServiceInterface;
 import hackathon.rc.ca.hackathon.player.PlaybackManager;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -22,6 +23,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class App extends Application {
 
     private NeuroApiServiceInterface mNeuroApiService;
+
     public NeuroApiServiceInterface getNeuroApiService() {
         return mNeuroApiService;
     }
@@ -31,18 +33,32 @@ public class App extends Application {
         return mPlaybackManager;
     }
 
+    private ValidationMediaApiServiceInterface mValidationMediaApiService;
+
+    public ValidationMediaApiServiceInterface getValidationMediaApiService() {
+        return mValidationMediaApiService;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
+        final JacksonConverterFactory factory = JacksonConverterFactory.create();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://services.radio-canada.ca/hackathon2017/")
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(factory)
                 .build();
 
         mNeuroApiService = retrofit.create(NeuroApiServiceInterface.class);
 
-        mPlaybackManager = new PlaybackManager(getApplicationContext());
+        Retrofit retrofitValidationMedia = new Retrofit.Builder()
+                .baseUrl("http://api.radio-canada.ca")
+                .addConverterFactory(factory)
+                .build();
+
+        mValidationMediaApiService = retrofitValidationMedia.create(ValidationMediaApiServiceInterface.class);
+
+        mPlaybackManager = new PlaybackManager(getApplicationContext(), mValidationMediaApiService);
     }
 
 
