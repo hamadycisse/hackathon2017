@@ -32,4 +32,10 @@ public class PlaylistItem {
     private SummaryMultimediaItem SummaryMultimediaItem = new SummaryMultimediaItem();
 
 
+    public SummaryMultimediaItem getSummaryMultimediaItem() {
+        return SummaryMultimediaItem;
+    }
+    public void setSummaryMultimediaItem(SummaryMultimediaItem SummaryMultimediaItem) {
+        this.SummaryMultimediaItem = SummaryMultimediaItem;
+    }
 }
