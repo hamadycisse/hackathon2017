@@ -1,9 +1,9 @@
 package hackathon.rc.ca.hackathon.controllers;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -18,12 +18,13 @@ import bolts.Continuation;
 import bolts.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
 import retrofit2.Call;
+
+import static android.view.View.GONE;
 
 /**
  * A fragment representing a single Playlist detail screen.
@@ -82,13 +83,15 @@ public class PlaylistDetailFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final Activity activity = this.getActivity();
+        final PlaylistDetailActivity activity = (PlaylistDetailActivity)this.getActivity();
+        final FloatingActionButton playlistPlayButton = activity.getPlaylistPlayButton();
         if (getArguments().containsKey(ARG_ITEM_ID)) {
 
             final String itemId = getArguments().getString(PlaylistDetailFragment.ARG_ITEM_ID);
             Task.callInBackground(new Callable<Playlist>() {
                 @Override
                 public Playlist call() throws Exception {
+                    playlistPlayButton.setVisibility(GONE);
                     final Call<Playlist> playlistCall = getApp()
                             .getNeuroApiService()
                             .getPlaylist(itemId);
@@ -114,6 +117,15 @@ public class PlaylistDetailFragment extends Fragment {
                     if (mPlaylist != null) {
                         mSummaryText.setText(Html.fromHtml(mPlaylist.getSummary()));
                     }
+
+                    playlistPlayButton.setVisibility(View.VISIBLE);
+                    playlistPlayButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+                            playlistPlayButton.setVisibility(View.GONE);
+                            getApp().getPlaybackManager().play(mPlaylist);
+                        }
+                    });
                     return null;
                 }
             }, Task.UI_THREAD_EXECUTOR);
@@ -122,11 +134,5 @@ public class PlaylistDetailFragment extends Fragment {
 
     private App getApp() {
         return (App) getActivity().getApplication();
-    }
-
-    @OnClick(R.id.playlist_detail)
-    public void onPlay() {
-
-        getApp().getPlaybackManager().play(mPlaylist);
     }
 }

@@ -13,6 +13,7 @@ import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.AdaptiveMediaSourceEventListener;
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
@@ -83,7 +84,7 @@ public class PlaybackManager {
         Task.callInBackground(new Callable<ValidationMedia>() {
             @Override
             public ValidationMedia call() throws Exception {
-                final Call<ValidationMedia> mediaUrlCall = mValidationMediaApiService.getMediaUrl(playlist.getItems().get(0)
+                final Call<ValidationMedia> mediaUrlCall = mValidationMediaApiService.getMediaUrl(playlist.getItems().get(1)
                         .getSummaryMultimediaItem().getFutureId());
                 final Response<ValidationMedia> mediaUrl = mediaUrlCall.execute();
                 return mediaUrl.body();
@@ -95,13 +96,15 @@ public class PlaybackManager {
                     throw new RuntimeException(task.getError().getMessage());
                 }
                 MediaSource mediaSource = buildMediaSource(Uri.parse(task.getResult().getUrl()), "");
-                mSimpleExoPlayer.prepare(mediaSource);
-                mSimpleExoPlayer.setPlayWhenReady(true);
-
                 MediaSource infoMediaSource = buildMediaSource(Uri.parse("https://archive" +
                         ".org/download/testmp3testfile/mpthreetest.mp3"), "");
-                mTrackInfoPlayer.prepare(infoMediaSource);
-                mTrackInfoPlayer.setPlayWhenReady(true);
+                mSimpleExoPlayer.setPlayWhenReady(true);
+                ConcatenatingMediaSource mediaSources
+                        = new ConcatenatingMediaSource(infoMediaSource, mediaSource);
+
+                mSimpleExoPlayer.prepare(mediaSources);
+//                mTrackInfoPlayer.prepare(infoMediaSource);
+//                mTrackInfoPlayer.setPlayWhenReady(true);
                 return null;
             }
         }, Task.UI_THREAD_EXECUTOR);
@@ -123,6 +126,14 @@ public class PlaybackManager {
     }
 
     private DataSource.Factory buildDataSourceFactory() {
+        return new DefaultDataSourceFactory(mApplicationContext, null,
+                new DefaultHttpDataSourceFactory(Util.getUserAgent(mApplicationContext,
+                        mApplicationContext.getPackageName()), null));
+    }
+
+    private DataSource.Factory buildAuthenticatedDataSourceFactory(
+            
+    ) {
         return new DefaultDataSourceFactory(mApplicationContext, null,
                 new DefaultHttpDataSourceFactory(Util.getUserAgent(mApplicationContext,
                         mApplicationContext.getPackageName()), null));

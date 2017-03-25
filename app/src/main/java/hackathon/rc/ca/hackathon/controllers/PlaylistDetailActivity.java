@@ -10,14 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import bolts.Task;
-import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
-import hackathon.rc.ca.hackathon.dtos.Playlist;
-import retrofit2.Call;
 
 /**
  * An activity representing a single Playlist detail screen. This
@@ -27,6 +20,11 @@ import retrofit2.Call;
  */
 public class PlaylistDetailActivity extends AppCompatActivity {
 
+    private FloatingActionButton mPlaylistPlayButton;
+    public FloatingActionButton getPlaylistPlayButton() {
+        return mPlaylistPlayButton;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,14 +32,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        mPlaylistPlayButton = (FloatingActionButton) findViewById(R.id.fab);
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
