@@ -1,4 +1,4 @@
-package hackathon.rc.ca.hackathon;
+package hackathon.rc.ca.hackathon.controllers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dummy.DummyContent;
 
 import java.util.List;
@@ -106,7 +107,7 @@ public class PlaylistListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, PlaylistDetailActivity.class);
-                        intent.putExtra(PlaylistDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(PlaylistDetailFragment.ARG_ITEM_ID, "91549");
 
                         context.startActivity(intent);
                     }

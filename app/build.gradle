@@ -19,6 +19,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/maven/com.squareup/javawriter/pom.xml'
+        exclude 'META-INF/maven/com.squareup/javawriter/pom.properties'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+        exclude 'jsr305_annotations/Jsr305_annotations.gwt.xml'
+        exclude 'META-INF/INDEX.LIST'
+    }
 }
 
 dependencies {
@@ -41,5 +52,9 @@ dependencies {
     compile 'com.google.android.exoplayer:exoplayer:r2.3.1'
     //Taches asynchrones
     compile 'com.parse.bolts:bolts-tasks:1.4.0'
+
+    //Appels réseaux
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
 
 }

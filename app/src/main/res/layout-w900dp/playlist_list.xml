@@ -9,7 +9,7 @@
               android:divider="?android:attr/dividerHorizontal"
               android:orientation="horizontal"
               android:showDividers="middle"
-              tools:context="hackathon.rc.ca.hackathon.PlaylistListActivity">
+              tools:context="hackathon.rc.ca.hackathon.controllers.PlaylistListActivity">
 
     <!--
     This layout is a two-pane layout for the Playlists
@@ -26,7 +26,7 @@
                                             android:layout_marginLeft="16dp"
                                             android:layout_marginRight="16dp"
                                             app:layoutManager="LinearLayoutManager"
-                                            tools:context="hackathon.rc.ca.hackathon.PlaylistListActivity"
+                                            tools:context="hackathon.rc.ca.hackathon.controllers.PlaylistListActivity"
                                             tools:listitem="@layout/playlist_list_content"/>
 
     <FrameLayout
