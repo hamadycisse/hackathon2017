@@ -43,7 +43,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <FrameLayout
-        android:id="@+id/mini_controller_container"
+        android:id="@+id/mini_controller_container_past"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"/>
