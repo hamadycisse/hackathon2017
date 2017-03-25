@@ -29,7 +29,13 @@ public class PlaylistItem {
         this.id = id;
     }
 
-    private SummaryMultimediaItem SummaryMultimediaItem = new SummaryMultimediaItem();
+    private SummaryMultimediaItem summaryMultimediaItem = new SummaryMultimediaItem();
 
 
+    public SummaryMultimediaItem getSummaryMultimediaItem() {
+        return summaryMultimediaItem;
+    }
+    public void setSummaryMultimediaItem(SummaryMultimediaItem SummaryMultimediaItem) {
+        this.summaryMultimediaItem = SummaryMultimediaItem;
+    }
 }

@@ -35,4 +35,15 @@ public class ConcreteImage {
     public void setDimensionRatio(String dimensionRatio){
         this.dimensionRatio = dimensionRatio;
     }
+
+
+
+    private MediaLink mediaLink = new MediaLink();
+
+    public MediaLink getMediaLink(){
+        return mediaLink;
+    }
+    public void setMediaLink(MediaLink mediaLink){
+        this.mediaLink = mediaLink;
+    }
 }

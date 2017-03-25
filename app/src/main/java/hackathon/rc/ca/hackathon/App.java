@@ -5,6 +5,7 @@ import android.app.Application;
 import com.fasterxml.jackson.core.JsonFactory;
 
 import hackathon.rc.ca.hackathon.client.NeuroApiServiceInterface;
+import hackathon.rc.ca.hackathon.player.PlaybackManager;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -25,6 +26,11 @@ public class App extends Application {
         return mNeuroApiService;
     }
 
+    private PlaybackManager mPlaybackManager;
+    public PlaybackManager getPlaybackManager() {
+        return mPlaybackManager;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,5 +41,9 @@ public class App extends Application {
                 .build();
 
         mNeuroApiService = retrofit.create(NeuroApiServiceInterface.class);
+
+        mPlaybackManager = new PlaybackManager(getApplicationContext());
     }
+
+
 }
