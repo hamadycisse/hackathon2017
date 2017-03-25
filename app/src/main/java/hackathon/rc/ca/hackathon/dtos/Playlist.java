@@ -1,17 +1,19 @@
-package com.example.portable.hackathon.dtos;
+package hackathon.rc.ca.hackathon.dtos;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by Portable on 2017-03-25.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Playlist {
-    private String idTitle;
+    private String id;
 
-    public String getIdTitle() {
-        return idTitle;
+    public String getId() {
+        return id;
     }
-    public void setIdTitle(String idTitle) {
-        this.idTitle = idTitle;
+    public void setId(String id) {
+        this.id = id;
     }
 
     private String title;
