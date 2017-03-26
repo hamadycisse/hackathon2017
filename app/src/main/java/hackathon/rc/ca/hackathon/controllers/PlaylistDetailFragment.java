@@ -1,17 +1,21 @@
 package hackathon.rc.ca.hackathon.controllers;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import bolts.Continuation;
@@ -22,6 +26,7 @@ import butterknife.Unbinder;
 import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
+import hackathon.rc.ca.hackathon.dummy.DummyContent;
 import retrofit2.Call;
 
 import static android.view.View.GONE;
@@ -36,8 +41,8 @@ public class PlaylistDetailFragment extends Fragment {
 
 
     private Unbinder mUnbinder;
+    @BindView(R.id.playlist_list) RecyclerView mRecyclerView;
 
-    @BindView(R.id.playlist_detail) TextView mSummaryText;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -115,7 +120,7 @@ public class PlaylistDetailFragment extends Fragment {
 
                     // Show the dummy content as text in a TextView.
                     if (mPlaylist != null) {
-                        mSummaryText.setText(Html.fromHtml(mPlaylist.getSummary()));
+                        mRecyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
                     }
 
                     playlistPlayButton.setVisibility(View.VISIBLE);
@@ -130,9 +135,66 @@ public class PlaylistDetailFragment extends Fragment {
                 }
             }, Task.UI_THREAD_EXECUTOR);
         }
+
+
+
     }
 
     private App getApp() {
         return (App) getActivity().getApplication();
+    }
+    public class SimpleItemRecyclerViewAdapter
+            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+
+        private final List<DummyContent.DummyItem> mValues;
+
+        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+            mValues = items;
+        }
+
+        @Override
+        public SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.playlist_item_layout, parent, false);
+            return new SimpleItemRecyclerViewAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
+            holder.mItem = mValues.get(position);
+            holder.mIdView.setText(mValues.get(position).id);
+            holder.mContentView.setText(mValues.get(position).content);
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+// TODO Start Media Playback Here
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public final View mView;
+            public final TextView mIdView;
+            public final TextView mContentView;
+            public DummyContent.DummyItem mItem;
+
+            public ViewHolder(View view) {
+                super(view);
+                mView = view;
+                mIdView = (TextView) view.findViewById(R.id.element_number);
+                mContentView = (TextView) view.findViewById(R.id.element_title);
+            }
+
+            @Override
+            public String toString() {
+                return super.toString() + " '" + mContentView.getText() + "'";
+            }
+        }
     }
 }
