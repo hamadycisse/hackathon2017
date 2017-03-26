@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -83,6 +84,13 @@ public class PlaylistListActivity extends AppCompatActivity {
                     .add(R.id.mini_controller_container, miniControllerFragment)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
