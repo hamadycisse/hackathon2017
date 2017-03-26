@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/exo_media_button_height"
-    android:layout_gravity="bottom"
-    android:gravity="bottom"
     android:orientation="horizontal"
     android:weightSum="1">
 
@@ -17,7 +15,7 @@
         <ImageButton
             android:id="@+id/Pause"
             android:layout_width="50dp"
-            android:layout_height="52dp"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@android:color/darker_gray"
             app:srcCompat="@drawable/exo_controls_pause" />
@@ -25,11 +23,9 @@
         <ImageButton
             android:id="@+id/Play"
             android:layout_width="50dp"
-            android:layout_height="52dp"
-            android:layout_gravity="bottom"
+            android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@android:color/holo_orange_dark"
-            android:foregroundGravity="bottom"
+            android:background="@color/colorPrimaryDark"
             app:srcCompat="@android:drawable/ic_media_play" />
 
     </FrameLayout>
@@ -37,21 +33,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorControlNormal"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/list_name"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:layout_marginTop="4dp"
-            android:text="Titre de la liste"
-            android:textColor="?android:attr/colorControlNormal"
-            android:textSize="14sp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Titre de la liste" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
@@ -61,27 +53,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"
-                android:gravity="center_vertical"
-                android:textColor="#595959"
+                android:layout_weight="1"
                 tools:text="#/total" />
 
             <TextView
                 android:id="@+id/element_name"
-                android:layout_width="237dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:layout_weight="3.08"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fab_margin"
                 android:contentDescription="element_title"
                 android:ellipsize="end"
-                android:gravity="center_vertical"
                 android:maxLines="1"
-                android:paddingLeft="6dp"
                 android:scrollHorizontally="true"
-                android:text="Titre de l'élément blahhhhhhhhhhh hhh hhhhhhh hhhhhhh hhhhh"
-                android:textColor="?attr/editTextColor"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:text="Titre de l'élément blahhhhhhhhhhh hhh hhhhhhh hhhhhhh hhhhh" />
         </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
