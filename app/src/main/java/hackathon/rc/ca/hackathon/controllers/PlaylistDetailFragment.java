@@ -28,6 +28,7 @@ import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
 import hackathon.rc.ca.hackathon.dtos.PlaylistItem;
 import hackathon.rc.ca.hackathon.dtos.SummaryMultimediaItem;
+import hackathon.rc.ca.hackathon.views.SimpleDividerItemDecoration;
 import retrofit2.Call;
 
 import static android.view.View.GONE;
@@ -83,7 +84,10 @@ public class PlaylistDetailFragment extends Fragment {
         final PlaylistDetailActivity activity = (PlaylistDetailActivity)this.getActivity();
         final FloatingActionButton playlistStartButton = activity.getPlaylistPlayButton();
 
-        final String itemId = "91549";
+
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+
+        final String itemId = "45890";
         playlistStartButton.setVisibility(GONE);
         Task.callInBackground(new Callable<Playlist>() {
             @Override

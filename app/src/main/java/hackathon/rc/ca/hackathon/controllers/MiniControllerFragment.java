@@ -16,6 +16,7 @@ import butterknife.Unbinder;
 import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dtos.PlaylistItem;
+import hackathon.rc.ca.hackathon.dtos.SummaryMultimediaItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -96,7 +97,12 @@ public class MiniControllerFragment extends Fragment {
 
     @OnClick(R.id.container)
     public void onOpen() {
-        ExpandedControllerDialogFragment expandedController = new ExpandedControllerDialogFragment();
+        final PlaylistItem currentTrack = getApp().getPlaybackManager().getCurrentTrack();
+        final SummaryMultimediaItem summaryMultimediaItem = currentTrack.getSummaryMultimediaItem();
+        ExpandedControllerDialogFragment expandedController = ExpandedControllerDialogFragment
+                .newInstance(summaryMultimediaItem != null ? summaryMultimediaItem
+                        .getSummaryImage().getConcreteImages().get(0).getMediaLink().getHref() : "",
+                        summaryMultimediaItem != null ? summaryMultimediaItem.getTitle() : "");
         expandedController.show(getActivity().getSupportFragmentManager(),
                 ExpandedControllerDialogFragment.class.getSimpleName());
     }

@@ -6,7 +6,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -25,7 +30,30 @@ import hackathon.rc.ca.hackathon.R;
 
 public class ExpandedControllerDialogFragment extends DialogFragment {
 
+    public static final String SUMMARY = "summary";
+    public static final String TITLE = "title";
+    public static final String IMAGE = "image";
+
+    @BindView(R.id.element_title) TextView mTitle;
+    @BindView(R.id.imageView) ImageView mImage;
+
     private Unbinder mUnbinder;
+
+    public static ExpandedControllerDialogFragment newInstance(final String image,
+                                                               final String title) {
+        
+        Bundle args = new Bundle();
+        args.putString(IMAGE, image);
+        args.putString(TITLE, title);
+        
+        ExpandedControllerDialogFragment fragment = new ExpandedControllerDialogFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public ExpandedControllerDialogFragment() {
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme_FullScreen);
+    }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -43,6 +71,9 @@ public class ExpandedControllerDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mTitle.setText(getArguments().getString(TITLE));
+        Glide.with(getContext()).load(getArguments().getString(IMAGE)).into(mImage);
     }
 
     @Override
