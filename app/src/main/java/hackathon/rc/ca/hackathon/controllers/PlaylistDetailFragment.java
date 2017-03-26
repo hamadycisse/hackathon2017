@@ -144,6 +144,7 @@ public class PlaylistDetailFragment extends Fragment {
     private App getApp() {
         return (App) getActivity().getApplication();
     }
+
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
