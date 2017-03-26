@@ -1,5 +1,6 @@
 package hackathon.rc.ca.hackathon.controllers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -67,26 +68,6 @@ public class PlaylistListActivity extends AppCompatActivity {
                     .commit();
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
-            case R.id.settings:
-                Intent launchNewIntent = new Intent(PlaylistListActivity.this,SettingsActivity.class);
-                startActivity(launchNewIntent);
-                return true;
-        }
-        return false;
-    }
-
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));

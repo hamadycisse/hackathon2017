@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import hackathon.rc.ca.hackathon.R;
@@ -31,12 +33,6 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mPlaylistPlayButton = (FloatingActionButton) findViewById(R.id.start_playlist);
-
-        // Show the Up button in the action bar.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -69,17 +65,20 @@ public class PlaylistDetailActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-            navigateUpTo(new Intent(this, PlaylistListActivity.class));
-            return true;
+        switch(id){
+            case R.id.settings:
+                Intent launchNewIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(launchNewIntent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
