@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.fasterxml.jackson.core.JsonFactory;
 
+import hackathon.rc.ca.hackathon.client.BingSpeechApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.NeuroApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.ValidationMediaApiServiceInterface;
 import hackathon.rc.ca.hackathon.player.PlaybackManager;
@@ -34,9 +35,14 @@ public class App extends Application {
     }
 
     private ValidationMediaApiServiceInterface mValidationMediaApiService;
-
     public ValidationMediaApiServiceInterface getValidationMediaApiService() {
         return mValidationMediaApiService;
+    }
+
+    private BingSpeechApiServiceInterface mBingSpeechApiService;
+
+    public BingSpeechApiServiceInterface getBingSpeechApiService() {
+        return mBingSpeechApiService;
     }
 
     @Override
@@ -58,7 +64,16 @@ public class App extends Application {
 
         mValidationMediaApiService = retrofitValidationMedia.create(ValidationMediaApiServiceInterface.class);
 
-        mPlaybackManager = new PlaybackManager(getApplicationContext(), mValidationMediaApiService);
+        Retrofit retrofitBingSpeech = new Retrofit.Builder()
+                .baseUrl("https://speech.platform.bing.com/")
+                .addConverterFactory(factory)
+                .build();
+
+        mBingSpeechApiService = retrofitBingSpeech
+                .create(BingSpeechApiServiceInterface.class);
+
+        mPlaybackManager = new PlaybackManager(getApplicationContext(),
+                mValidationMediaApiService, mBingSpeechApiService);
     }
 
 

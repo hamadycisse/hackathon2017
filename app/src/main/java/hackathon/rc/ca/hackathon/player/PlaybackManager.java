@@ -22,16 +22,25 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import bolts.Capture;
 import bolts.Continuation;
 import bolts.Task;
+import hackathon.rc.ca.hackathon.client.BingSpeechApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.ValidationMediaApiServiceInterface;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
 import hackathon.rc.ca.hackathon.dtos.ValidationMedia;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -49,6 +58,7 @@ public class PlaybackManager {
 
     private final Context mApplicationContext;
     private final ValidationMediaApiServiceInterface mValidationMediaApiService;
+    private final BingSpeechApiServiceInterface mBingSpeechApiService;
     private final Handler mMainHandler;
     private final MyEventListener mEventListener;
 
@@ -58,10 +68,12 @@ public class PlaybackManager {
     private PlaylistManager mPlaylistManager;
 
     public PlaybackManager(final Context applicationContext,
-                           final ValidationMediaApiServiceInterface validationMediaApiService) {
+                           final ValidationMediaApiServiceInterface validationMediaApiService,
+                           final BingSpeechApiServiceInterface bingSpeechApiService) {
 
         mApplicationContext = applicationContext;
         mValidationMediaApiService = validationMediaApiService;
+        mBingSpeechApiService = bingSpeechApiService;
         mMainHandler = new Handler(Looper.getMainLooper());
         mEventListener = new MyEventListener();
     }
@@ -81,11 +93,31 @@ public class PlaybackManager {
 
         mPlaylistManager = new PlaylistManager(playlist.getItems());
 
+        final Capture<String> infoFilePath = new Capture<>();
+
         Task.callInBackground(new Callable<ValidationMedia>() {
             @Override
             public ValidationMedia call() throws Exception {
-                final Call<ValidationMedia> mediaUrlCall = mValidationMediaApiService.getMediaUrl(playlist.getItems().get(1)
-                        .getSummaryMultimediaItem().getFutureId());
+                final String textToConvert = String.format("<speak version='1.0' " +
+                            "xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Male' name='Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)'>%s</voice></speak>"
+                            //"xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)'>%s</voice></speak>"
+                        , playlist.getTitle());
+                final String token = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6Imh0dHBzOi8vc3BlZWNoLnBsYXRmb3JtLmJpbmcuY29tIiwic3Vic2NyaXB0aW9uLWlkIjoiMDBhNzk1OWU2MTZjNGEwNmE0MzFhYjdlZjU4MzIwMWMiLCJwcm9kdWN0LWlkIjoiQmluZy5TcGVlY2guRjAiLCJjb2duaXRpdmUtc2VydmljZXMtZW5kcG9pbnQiOiJodHRwczovL2FwaS5jb2duaXRpdmUubWljcm9zb2Z0LmNvbS9pbnRlcm5hbC92MS4wLyIsImF6dXJlLXJlc291cmNlLWlkIjoiL3N1YnNjcmlwdGlvbnMvZjNkMmUxYzQtODFjZC00NDJhLTgxNDAtMDdhNjEwNGZkMGQyL3Jlc291cmNlR3JvdXBzL0hhY2thdGhvbi9wcm92aWRlcnMvTWljcm9zb2Z0LkNvZ25pdGl2ZVNlcnZpY2VzL2FjY291bnRzL2hhY2thdGhvbjIwMTciLCJpc3MiOiJ1cm46bXMuY29nbml0aXZlc2VydmljZXMiLCJhdWQiOiJ1cm46bXMuc3BlZWNoIiwiZXhwIjoxNDkwNDkyNDEwfQ.2H2-94LY9aA0f9Gp9bURAoHsjU_jjdhRVc2GeHgIDAY";
+                RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), textToConvert);
+                final Call<ResponseBody> infoAudioCall = mBingSpeechApiService
+                        .getAudio(token, requestBody);
+                final Response<ResponseBody> infoAudio = infoAudioCall.execute();
+                final ResponseBody body = infoAudio.body();
+                final String futureId = playlist.getItems().get(1)
+                        .getSummaryMultimediaItem().getFutureId();
+                File file = new File(mApplicationContext.getCacheDir(), futureId);
+                if (file.exists() && file.delete()) {
+                }
+                final FileOutputStream fileOutputStream = new FileOutputStream(file);
+                fileOutputStream.write(body.bytes());
+                fileOutputStream.flush();
+                infoFilePath.set(file.getAbsolutePath());
+                final Call<ValidationMedia> mediaUrlCall = mValidationMediaApiService.getMediaUrl(futureId);
                 final Response<ValidationMedia> mediaUrl = mediaUrlCall.execute();
                 return mediaUrl.body();
             }
@@ -95,9 +127,12 @@ public class PlaybackManager {
                 if (task.isFaulted()) {
                     throw new RuntimeException(task.getError().getMessage());
                 }
-                MediaSource mediaSource = buildMediaSource(Uri.parse(task.getResult().getUrl()), "");
-                MediaSource infoMediaSource = buildMediaSource(Uri.parse("https://archive" +
-                        ".org/download/testmp3testfile/mpthreetest.mp3"), "");
+                MediaSource mediaSource = buildMediaSource(Uri.parse(task.getResult().getUrl()), "",
+                        PlaybackManager.this.buildDataSourceFactory());
+
+                MediaSource infoMediaSource = new ExtractorMediaSource(Uri.parse(infoFilePath.get()),
+                        PlaybackManager.this.buildDataSourceFactory(),
+                        new DefaultExtractorsFactory(), mMainHandler, mEventListener);
                 mSimpleExoPlayer.setPlayWhenReady(true);
                 ConcatenatingMediaSource mediaSources
                         = new ConcatenatingMediaSource(infoMediaSource, mediaSource);
@@ -110,14 +145,14 @@ public class PlaybackManager {
         }, Task.UI_THREAD_EXECUTOR);
     }
 
-    private MediaSource buildMediaSource(Uri uri, String overrideExtension) {
+    private MediaSource buildMediaSource(Uri uri, String overrideExtension, final DataSource.Factory dataSourceFactory) {
         int type = TextUtils.isEmpty(overrideExtension) ? Util.inferContentType(uri)
                 : Util.inferContentType("." + overrideExtension);
         switch (type) {
             case C.TYPE_HLS:
-                return new HlsMediaSource(uri, buildDataSourceFactory(), mMainHandler, mEventListener);
+                return new HlsMediaSource(uri, dataSourceFactory, mMainHandler, mEventListener);
             case C.TYPE_OTHER:
-                return new ExtractorMediaSource(uri, buildDataSourceFactory(), new DefaultExtractorsFactory(),
+                return new ExtractorMediaSource(uri, dataSourceFactory, new DefaultExtractorsFactory(),
                         mMainHandler, mEventListener);
             default: {
                 throw new IllegalStateException("Unsupported type: " + type);
@@ -132,11 +167,18 @@ public class PlaybackManager {
     }
 
     private DataSource.Factory buildAuthenticatedDataSourceFactory(
-            
+        final String jwtToken
     ) {
+        final DefaultHttpDataSourceFactory baseDataSourceFactory = new DefaultHttpDataSourceFactory(Util.getUserAgent(mApplicationContext,
+                mApplicationContext.getPackageName()), null);
+        final HttpDataSource.RequestProperties defaultRequestProperties = baseDataSourceFactory.getDefaultRequestProperties();
+        defaultRequestProperties.set("Authorization", "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6Imh0dHBzOi8vc3BlZWNoLnBsYXRmb3JtLmJpbmcuY29tIiwic3Vic2NyaXB0aW9uLWlkIjoiMDBhNzk1OWU2MTZjNGEwNmE0MzFhYjdlZjU4MzIwMWMiLCJwcm9kdWN0LWlkIjoiQmluZy5TcGVlY2guRjAiLCJjb2duaXRpdmUtc2VydmljZXMtZW5kcG9pbnQiOiJodHRwczovL2FwaS5jb2duaXRpdmUubWljcm9zb2Z0LmNvbS9pbnRlcm5hbC92MS4wLyIsImF6dXJlLXJlc291cmNlLWlkIjoiL3N1YnNjcmlwdGlvbnMvZjNkMmUxYzQtODFjZC00NDJhLTgxNDAtMDdhNjEwNGZkMGQyL3Jlc291cmNlR3JvdXBzL0hhY2thdGhvbi9wcm92aWRlcnMvTWljcm9zb2Z0LkNvZ25pdGl2ZVNlcnZpY2VzL2FjY291bnRzL2hhY2thdGhvbjIwMTciLCJpc3MiOiJ1cm46bXMuY29nbml0aXZlc2VydmljZXMiLCJhdWQiOiJ1cm46bXMuc3BlZWNoIiwiZXhwIjoxNDkwNDg3NTQ3fQ.9j91Xrkcn3OnZpTpurXgtl8GFlDsGPw27M6dtzjgovc");
+        defaultRequestProperties.set("Content-Type", "application/ssml+xml");
+        defaultRequestProperties.set("X-Microsoft-OutputFormat", "audio-16khz-32kbitrate-mono-mp3");
+        defaultRequestProperties.set("X-Search-AppId", "4014878273d74c0085845e2aa59e3c27");
+        defaultRequestProperties.set("X-Search-ClientId", "3629e65096bf4593a390186a7e95e879");
         return new DefaultDataSourceFactory(mApplicationContext, null,
-                new DefaultHttpDataSourceFactory(Util.getUserAgent(mApplicationContext,
-                        mApplicationContext.getPackageName()), null));
+                baseDataSourceFactory);
     }
 
     public void resume() {
