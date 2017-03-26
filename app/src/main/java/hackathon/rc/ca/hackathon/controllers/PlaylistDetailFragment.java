@@ -40,6 +40,7 @@ import static android.view.View.GONE;
 public class PlaylistDetailFragment extends Fragment {
 
 
+    public static final String TAG = "PlayListDetailFragment";
     private Unbinder mUnbinder;
     @BindView(R.id.playlist_list) RecyclerView mRecyclerView;
 
@@ -88,7 +89,7 @@ public class PlaylistDetailFragment extends Fragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final PlaylistDetailActivity activity = (PlaylistDetailActivity)this.getActivity();
+        final PlaylistListActivity activity = (PlaylistListActivity)this.getActivity();
         final FloatingActionButton playlistPlayButton = activity.getPlaylistPlayButton();
         if (getArguments().containsKey(ARG_ITEM_ID)) {
 

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,9 +25,11 @@ public class MiniControllerFragment extends Fragment {
 
     private Unbinder mUnbinder;
 
-
     @BindView(R.id.Play) ImageButton mPlayButton;
     @BindView(R.id.Pause) ImageButton mPauseButton;
+    @BindView(R.id.list_name) TextView mListNameTextView;
+    @BindView(R.id.element_name) TextView mElementNameTextView;
+    @BindView(R.id.element_number) TextView mElementNumberTextView;
 
     public MiniControllerFragment() {
         // Required empty public constructor
@@ -44,6 +46,7 @@ public class MiniControllerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        updateMetaData();
     }
 
     @Override
@@ -80,5 +83,12 @@ public class MiniControllerFragment extends Fragment {
     public void onPaused() {
         getApp().getPlaybackManager().pause();
         mPlayButton.setVisibility(View.VISIBLE);
+    }
+
+    //Updates the metadata displayed in the mini-controller
+    public void updateMetaData(){
+        //mListNameTextView.setText("");
+        //mElementNameTextView.setText("");
+        //mElementNumberTextView.setText("");
     }
 }

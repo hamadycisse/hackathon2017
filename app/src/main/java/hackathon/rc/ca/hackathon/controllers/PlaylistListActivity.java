@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -37,6 +40,11 @@ public class PlaylistListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
+    private FloatingActionButton mPlaylistPlayButton;
+    public FloatingActionButton getPlaylistPlayButton() {
+        return mPlaylistPlayButton;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +53,8 @@ public class PlaylistListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        mPlaylistPlayButton = (FloatingActionButton) findViewById(R.id.fab);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +75,13 @@ public class PlaylistListActivity extends AppCompatActivity {
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+        }
+
+        if (savedInstanceState == null) {
+            MiniControllerFragment miniControllerFragment = new MiniControllerFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.mini_controller_container, miniControllerFragment)
+                    .commit();
         }
     }
 
@@ -106,11 +123,21 @@ public class PlaylistListActivity extends AppCompatActivity {
                                 .replace(R.id.playlist_detail_container, fragment)
                                 .commit();
                     } else {
+                        /*
                         Context context = v.getContext();
                         Intent intent = new Intent(context, PlaylistDetailActivity.class);
                         intent.putExtra(PlaylistDetailFragment.ARG_ITEM_ID, "91549");
-
                         context.startActivity(intent);
+                        */
+                        PlaylistDetailFragment playlistDetailFragment = new PlaylistDetailFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(PlaylistDetailFragment.ARG_ITEM_ID, "91549");
+                        playlistDetailFragment.setArguments(bundle);
+                        FragmentManager fm = getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.add(R.id.frameLayout, playlistDetailFragment);
+                        ft.addToBackStack(PlaylistDetailFragment.TAG);
+                        ft.commit();
                     }
                 }
             });
