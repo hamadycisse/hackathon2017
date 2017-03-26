@@ -1,7 +1,5 @@
 package hackathon.rc.ca.hackathon.controllers;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,11 +7,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -26,7 +26,8 @@ import butterknife.Unbinder;
 import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
-import hackathon.rc.ca.hackathon.dummy.DummyContent;
+import hackathon.rc.ca.hackathon.dtos.PlaylistItem;
+import hackathon.rc.ca.hackathon.dtos.SummaryMultimediaItem;
 import retrofit2.Call;
 
 import static android.view.View.GONE;
@@ -41,16 +42,14 @@ public class PlaylistDetailFragment extends Fragment {
 
 
     public static final String TAG = "PlayListDetailFragment";
-    private Unbinder mUnbinder;
-    @BindView(R.id.playlist_list) RecyclerView mRecyclerView;
-
-
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    @BindView(R.id.playlist_list) RecyclerView mRecyclerView;
 
+    private Unbinder mUnbinder;
     /**
      * The dummy content this fragment is presenting.
      */
@@ -78,67 +77,65 @@ public class PlaylistDetailFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        final PlaylistDetailActivity activity = (PlaylistDetailActivity)this.getActivity();
+        final FloatingActionButton playlistStartButton = activity.getPlaylistPlayButton();
+
+        final String itemId = "91549";
+        playlistStartButton.setVisibility(GONE);
+        Task.callInBackground(new Callable<Playlist>() {
+            @Override
+            public Playlist call() throws Exception {
+                final Call<Playlist> playlistCall = getApp()
+                        .getNeuroApiService()
+                        .getPlaylist(itemId);
+                return playlistCall.execute().body();
+            }
+        }).continueWith(new Continuation<Playlist, Void>() {
+            @Override
+            public Void then(final Task<Playlist> task) throws Exception {
+
+                if (task.isFaulted()) {
+                    Snackbar.make(getView(), "Une erreur s'est produite: " + task.getError()
+                            .getMessage(), Snackbar.LENGTH_LONG).show();
+                    return null;
+                }
+                mPlaylist = task.getResult();
+
+                CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+                if (appBarLayout != null) {
+                    appBarLayout.setTitle(mPlaylist.getTitle());
+                }
+
+                // Show the dummy content as text in a TextView.
+                if (mPlaylist != null) {
+                    mRecyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(mPlaylist.getItems()));
+                }
+
+                playlistStartButton.setVisibility(View.VISIBLE);
+                playlistStartButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View view) {
+                        playlistStartButton.setVisibility(View.GONE);
+                        getApp().getPlaybackManager().play(mPlaylist);
+                        activity.showMiniController();
+                    }
+                });
+                return null;
+            }
+        }, Task.UI_THREAD_EXECUTOR);
+
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }
-    }
-
-    @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        final PlaylistListActivity activity = (PlaylistListActivity)this.getActivity();
-        final FloatingActionButton playlistPlayButton = activity.getPlaylistPlayButton();
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-
-            final String itemId = getArguments().getString(PlaylistDetailFragment.ARG_ITEM_ID);
-            Task.callInBackground(new Callable<Playlist>() {
-                @Override
-                public Playlist call() throws Exception {
-                    playlistPlayButton.setVisibility(GONE);
-                    final Call<Playlist> playlistCall = getApp()
-                            .getNeuroApiService()
-                            .getPlaylist(itemId);
-                    return playlistCall.execute().body();
-                }
-            }).continueWith(new Continuation<Playlist, Void>() {
-                @Override
-                public Void then(final Task<Playlist> task) throws Exception {
-
-                    if (task.isFaulted()) {
-                        Snackbar.make(getView(), "Une erreur s'est produite: " + task.getError()
-                                .getMessage(), Snackbar.LENGTH_LONG).show();
-                        return null;
-                    }
-                    mPlaylist = task.getResult();
-
-                    CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-                    if (appBarLayout != null) {
-                        appBarLayout.setTitle(mPlaylist.getTitle());
-                    }
-
-                    // Show the dummy content as text in a TextView.
-                    if (mPlaylist != null) {
-                        mRecyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
-                    }
-
-                    playlistPlayButton.setVisibility(View.VISIBLE);
-                    playlistPlayButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View view) {
-                            playlistPlayButton.setVisibility(View.GONE);
-                            getApp().getPlaybackManager().play(mPlaylist);
-                        }
-                    });
-                    return null;
-                }
-            }, Task.UI_THREAD_EXECUTOR);
-        }
-
-
-
     }
 
     private App getApp() {
@@ -148,9 +145,9 @@ public class PlaylistDetailFragment extends Fragment {
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<PlaylistItem> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<PlaylistItem> items) {
             mValues = items;
         }
 
@@ -164,8 +161,12 @@ public class PlaylistDetailFragment extends Fragment {
         @Override
         public void onBindViewHolder(final SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            final SummaryMultimediaItem summaryMultimediaItem = mValues.get(position).getSummaryMultimediaItem();
+            holder.mContentView.setText(summaryMultimediaItem.getTitle());
+            Glide.with(getContext()).load(summaryMultimediaItem.getSummaryImage()
+                    .getConcreteImages().get(0).getMediaLink()
+                    .getHref())
+            .into(holder.mThumbnail);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -182,15 +183,16 @@ public class PlaylistDetailFragment extends Fragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mIdView;
             public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+            public final ImageView mThumbnail;
+
+            public PlaylistItem mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.element_number);
                 mContentView = (TextView) view.findViewById(R.id.element_title);
+                mThumbnail = (ImageView) view.findViewById(R.id.thumbnail_view);
             }
 
             @Override

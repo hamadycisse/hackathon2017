@@ -43,20 +43,19 @@
     </android.support.v4.widget.NestedScrollView>
 
     <FrameLayout
-        android:id="@+id/mini_controller_container_past"
+        android:id="@+id/mini_controller_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"/>
 
-
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/start_playlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/playlist_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat"/>
+        app:srcCompat="@android:drawable/ic_media_play"/>
 
 </android.support.design.widget.CoordinatorLayout>

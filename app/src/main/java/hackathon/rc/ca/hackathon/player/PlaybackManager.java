@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.android.exoplayer2.C;
@@ -37,6 +38,7 @@ import bolts.Task;
 import hackathon.rc.ca.hackathon.client.BingSpeechApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.ValidationMediaApiServiceInterface;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
+import hackathon.rc.ca.hackathon.dtos.PlaylistItem;
 import hackathon.rc.ca.hackathon.dtos.ValidationMedia;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -102,7 +104,7 @@ public class PlaybackManager {
                             "xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Male' name='Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)'>%s</voice></speak>"
                             //"xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)'>%s</voice></speak>"
                         , playlist.getTitle());
-                final String token = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6Imh0dHBzOi8vc3BlZWNoLnBsYXRmb3JtLmJpbmcuY29tIiwic3Vic2NyaXB0aW9uLWlkIjoiMDBhNzk1OWU2MTZjNGEwNmE0MzFhYjdlZjU4MzIwMWMiLCJwcm9kdWN0LWlkIjoiQmluZy5TcGVlY2guRjAiLCJjb2duaXRpdmUtc2VydmljZXMtZW5kcG9pbnQiOiJodHRwczovL2FwaS5jb2duaXRpdmUubWljcm9zb2Z0LmNvbS9pbnRlcm5hbC92MS4wLyIsImF6dXJlLXJlc291cmNlLWlkIjoiL3N1YnNjcmlwdGlvbnMvZjNkMmUxYzQtODFjZC00NDJhLTgxNDAtMDdhNjEwNGZkMGQyL3Jlc291cmNlR3JvdXBzL0hhY2thdGhvbi9wcm92aWRlcnMvTWljcm9zb2Z0LkNvZ25pdGl2ZVNlcnZpY2VzL2FjY291bnRzL2hhY2thdGhvbjIwMTciLCJpc3MiOiJ1cm46bXMuY29nbml0aXZlc2VydmljZXMiLCJhdWQiOiJ1cm46bXMuc3BlZWNoIiwiZXhwIjoxNDkwNDkyNDEwfQ.2H2-94LY9aA0f9Gp9bURAoHsjU_jjdhRVc2GeHgIDAY";
+                final String token = "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6Imh0dHBzOi8vc3BlZWNoLnBsYXRmb3JtLmJpbmcuY29tIiwic3Vic2NyaXB0aW9uLWlkIjoiMDBhNzk1OWU2MTZjNGEwNmE0MzFhYjdlZjU4MzIwMWMiLCJwcm9kdWN0LWlkIjoiQmluZy5TcGVlY2guRjAiLCJjb2duaXRpdmUtc2VydmljZXMtZW5kcG9pbnQiOiJodHRwczovL2FwaS5jb2duaXRpdmUubWljcm9zb2Z0LmNvbS9pbnRlcm5hbC92MS4wLyIsImF6dXJlLXJlc291cmNlLWlkIjoiL3N1YnNjcmlwdGlvbnMvZjNkMmUxYzQtODFjZC00NDJhLTgxNDAtMDdhNjEwNGZkMGQyL3Jlc291cmNlR3JvdXBzL0hhY2thdGhvbi9wcm92aWRlcnMvTWljcm9zb2Z0LkNvZ25pdGl2ZVNlcnZpY2VzL2FjY291bnRzL2hhY2thdGhvbjIwMTciLCJpc3MiOiJ1cm46bXMuY29nbml0aXZlc2VydmljZXMiLCJhdWQiOiJ1cm46bXMuc3BlZWNoIiwiZXhwIjoxNDkwNTQyMDgxfQ.dqV43V8l2_sEaaf5As39ly5tR8SZdaDeCboVeaLAWS8";
                 RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), textToConvert);
                 final Call<ResponseBody> infoAudioCall = mBingSpeechApiService
                         .getAudio(token, requestBody);
@@ -191,6 +193,14 @@ public class PlaybackManager {
         if (mSimpleExoPlayer != null) {
             mSimpleExoPlayer.setPlayWhenReady(false);
         }
+    }
+
+    @Nullable
+    public PlaylistItem getCurrentTrack() {
+        if (mPlaylistManager == null) {
+            return null;
+        }
+        return mPlaylistManager.getCurrentTrack();
     }
 
     private class MyEventListener implements ExtractorMediaSource.EventListener,

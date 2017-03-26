@@ -2,10 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/exo_media_button_height"
     android:orientation="horizontal"
+    android:background="@android:color/white"
     android:weightSum="1">
+
+    <ImageButton
+        android:id="@+id/previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/exo_controls_previous" />
 
     <FrameLayout
         android:id="@+id/play_pause"
@@ -17,7 +28,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@android:color/darker_gray"
+            android:visibility="visible"
+            android:background="@color/colorPrimaryDark"
             app:srcCompat="@drawable/exo_controls_pause" />
 
         <ImageButton
@@ -25,6 +37,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:visibility="invisible"
             android:background="@color/colorPrimaryDark"
             app:srcCompat="@android:drawable/ic_media_play" />
 
@@ -40,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Titre de la liste" />
+            tools:text="Titre de la liste" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -65,7 +78,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
-                android:text="Titre de l'élément blahhhhhhhhhhh hhh hhhhhhh hhhhhhh hhhhh" />
+                tools:text="Titre de l'élément blahhhhhhhhhhh hhh hhhhhhh hhhhhhh hhhhh" />
         </LinearLayout>
 
         <SeekBar

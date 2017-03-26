@@ -3,9 +3,7 @@ package hackathon.rc.ca.hackathon.controllers;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
@@ -32,7 +30,7 @@ public class PlaylistDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        mPlaylistPlayButton = (FloatingActionButton) findViewById(R.id.fab);
+        mPlaylistPlayButton = (FloatingActionButton) findViewById(R.id.start_playlist);
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -60,12 +58,14 @@ public class PlaylistDetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.playlist_detail_container, fragment)
                     .commit();
-/**
-            MiniControllerFragment miniControllerFragment = new MiniControllerFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mini_controller_container, miniControllerFragment)
-                    .commit(); **/
         }
+    }
+
+    public void showMiniController() {
+        MiniControllerFragment miniControllerFragment = new MiniControllerFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.mini_controller_container, miniControllerFragment)
+                .commit();
     }
 
     @Override

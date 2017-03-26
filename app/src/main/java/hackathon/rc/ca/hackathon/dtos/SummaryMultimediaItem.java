@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SummaryMultimediaItem {
 
-    private String item;
+    private String title;
 
-    public String getItem() {
+    public String getTitle() {
 
-        return item;
+        return title;
     }
 
-    public void setItem(String item) {
+    public void setTitle(String title) {
 
-        this.item = item;
+        this.title = title;
     }
 
     private String futureId;
@@ -28,15 +28,15 @@ public class SummaryMultimediaItem {
         this.futureId = futureId;
     }
 
-    private String futureDuration;
+    private int futureDuration;
 
-    public String getFutureDuration() {
+    public int getFutureDuration() {
 
         return futureDuration;
     }
-    public void setFutureDuration() {
+    public void setFutureDuration(final int futureDuration) {
 
-        this.futureId = futureId;
+        this.futureDuration = futureDuration;
     }
 
     private String summary;
@@ -50,14 +50,14 @@ public class SummaryMultimediaItem {
         this.summary = summary;
     }
 
-    private ConcreteImage ConcreteImage = new ConcreteImage();
+    private ConceptualImage summaryImage = new ConceptualImage();
 
 
-    public ConcreteImage getConcreteImage() {
-        return ConcreteImage;
+    public ConceptualImage getSummaryImage() {
+        return summaryImage;
     }
 
-    public void setConcreteImage(ConcreteImage ConcreteImage) {
-        this.ConcreteImage = ConcreteImage;
+    public void setSummaryImage(ConceptualImage conceptualImage) {
+        this.summaryImage = conceptualImage;
     }
 }
