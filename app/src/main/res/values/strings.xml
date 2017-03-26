@@ -2,6 +2,21 @@
     <string name="app_name">Fides</string>
     <string name="title_playlist_detail">Playlist Detail</string>
 
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_automatic">Présentation audio automatique</string>
+    <string name="pref_description_automatic">Activer la présentation audio automatique au début de la liste de lecture</string>
+
+    <string name="pref_title_add_friends_to_messages">Voix masculine ou féminine</string>
+    <string-array name="pref_example_list_titles">
+        <item>Masculine</item>
+        <item>Féminine</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
