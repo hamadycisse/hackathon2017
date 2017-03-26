@@ -9,12 +9,12 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="265dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:srcCompat="@android:color/holo_blue_bright" />
 
         <TextView
@@ -24,9 +24,8 @@
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginTop="@dimen/text_margin"
             android:paddingTop="@dimen/fab_margin"
-            android:background="#1A000000"
-            android:textColor="@android:color/darker_gray"
-            android:text="Titre de element"
+            android:gravity="center_horizontal"
+            tools:text="Titre de element"
             android:textSize="24sp" />
 
     </LinearLayout>

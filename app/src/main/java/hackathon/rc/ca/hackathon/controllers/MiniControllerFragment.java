@@ -3,6 +3,7 @@ package hackathon.rc.ca.hackathon.controllers;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class MiniControllerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final PlaylistItem currentTrack = getApp().getPlaybackManager().getCurrentTrack();
         if (currentTrack != null) {
-            mElementNameTextView.setText(currentTrack.getSummaryMultimediaItem().getTitle());
+            mElementNameTextView.setText(Html.fromHtml(currentTrack.getSummaryMultimediaItem().getTitle()));
         }
     }
 

@@ -239,6 +239,9 @@ public class PlaybackManager {
         if (mPlaylistManager == null || !mPlaylistManager.hasNextTrack()) {
             return;
         }
+        if (mSimpleExoPlayer != null) {
+            mSimpleExoPlayer.setPlayWhenReady(false);
+        }
         final PlaylistItem nextTrack = mPlaylistManager.getNextTrack();
         final SummaryMultimediaItem summaryMultimediaItem = nextTrack.getSummaryMultimediaItem();
         loadMedia(summaryMultimediaItem.getTitle(), summaryMultimediaItem.getFutureId());
@@ -247,6 +250,9 @@ public class PlaybackManager {
     public void playPrevious() {
         if (mPlaylistManager == null || !mPlaylistManager.hasPreviousTrack()) {
             return;
+        }
+        if (mSimpleExoPlayer != null) {
+            mSimpleExoPlayer.setPlayWhenReady(false);
         }
         final PlaylistItem nextTrack = mPlaylistManager.getPreviousTrack();
         final SummaryMultimediaItem summaryMultimediaItem = nextTrack.getSummaryMultimediaItem();
