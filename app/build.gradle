@@ -41,7 +41,6 @@ dependencies {
     //Image download
     //Pour la lecture audio
     //Taches asynchrones
-    
 
     //Appels réseaux
     compile 'com.android.support:appcompat-v7:25.2.0'

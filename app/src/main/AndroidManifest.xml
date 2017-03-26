@@ -31,6 +31,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="hackathon.rc.ca.hackathon.controllers.PlaylistListActivity"/>
         </activity>
+        <activity
+            android:name=".controllers.SettingsActivity"
+            android:label="@string/title_settings"
+            android:parentActivityName=".controllers.PlaylistListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="hackathon.rc.ca.hackathon.controllers.PlaylistListActivity"/>
+        </activity>
     </application>
 
 </manifest>

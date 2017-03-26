@@ -2,6 +2,9 @@
     <string name="app_name">Fides</string>
     <string name="title_playlist_detail">Playlist Detail</string>
 
+
+    <string name="title_settings">Réglages</string>
+
     <string name="pref_header_general">General</string>
 
     <string name="pref_title_automatic">Présentation audio automatique</string>
