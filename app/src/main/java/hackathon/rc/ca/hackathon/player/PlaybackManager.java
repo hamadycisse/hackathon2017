@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -117,12 +118,19 @@ public class PlaybackManager {
     private void loadMedia(final String trackTitle, final String futureId) {
         final Capture<String> infoFilePath = new Capture<>();
 
+        final String gender = PreferenceManager
+                .getDefaultSharedPreferences(mApplicationContext)
+                .getString("example_list", null);
+        final boolean useMasculine = gender == null || "0".equals(gender);
+
         Task.callInBackground(new Callable<ValidationMedia>() {
             @Override
             public ValidationMedia call() throws Exception {
-                final String textToConvert = String.format("<speak version='1.0' " +
+                final String ssmlVoiceSpec = useMasculine ?
                         "xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Male' name='Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)'>%s</voice></speak>"
-                        //"xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)'>%s</voice></speak>"
+                        : "xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)'>%s</voice></speak>";
+                final String textToConvert = String.format("<speak version='1.0' " +
+                                ssmlVoiceSpec
                         , trackTitle);
                 if (mToken == null || TextUtils.isEmpty(mToken) || (SystemClock
                         .uptimeMillis() - mTokenTimeStamp) >= TOKEN_DURATION_MS) {

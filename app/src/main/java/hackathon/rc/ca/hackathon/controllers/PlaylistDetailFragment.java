@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +88,7 @@ public class PlaylistDetailFragment extends Fragment {
 
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
 
-        final String itemId = "45890";
+        final String itemId = "92042";
         playlistStartButton.setVisibility(GONE);
         Task.callInBackground(new Callable<Playlist>() {
             @Override
@@ -166,7 +167,7 @@ public class PlaylistDetailFragment extends Fragment {
         public void onBindViewHolder(final SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             final SummaryMultimediaItem summaryMultimediaItem = mValues.get(position).getSummaryMultimediaItem();
-            holder.mContentView.setText(summaryMultimediaItem.getTitle());
+            holder.mContentView.setText(Html.fromHtml(summaryMultimediaItem.getTitle()));
             Glide.with(getContext()).load(summaryMultimediaItem.getSummaryImage()
                     .getConcreteImages().get(0).getMediaLink()
                     .getHref())

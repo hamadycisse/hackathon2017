@@ -3,6 +3,7 @@ package hackathon.rc.ca.hackathon.controllers;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
+import hackathon.rc.ca.hackathon.dtos.PlaylistItem;
+import hackathon.rc.ca.hackathon.player.PlaybackManager;
 
 /**
  * Created by Hamady Cissé on 2017-03-26.
@@ -72,8 +75,14 @@ public class ExpandedControllerDialogFragment extends DialogFragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mTitle.setText(getArguments().getString(TITLE));
-        Glide.with(getContext()).load(getArguments().getString(IMAGE)).into(mImage);
+        final String title = getArguments().getString(TITLE);
+        final String image = getArguments().getString(IMAGE);
+        updateMeta(title, image);
+    }
+
+    private void updateMeta(final String title, final String image) {
+        mTitle.setText(Html.fromHtml(title));
+        Glide.with(getContext()).load(image).into(mImage);
     }
 
     @Override
@@ -86,12 +95,25 @@ public class ExpandedControllerDialogFragment extends DialogFragment {
 
     @OnClick(R.id.next)
     public void onNext() {
-        (getApplication()).getPlaybackManager().playNext();
+        final PlaybackManager playbackManager = getApplication().getPlaybackManager();
+        playbackManager.playNext();
+        updateFromCurrentTrack(playbackManager);
     }
 
     @OnClick(R.id.previous)
     public void onPrevious() {
-        (getApplication()).getPlaybackManager().playPrevious();
+        final PlaybackManager playbackManager = getApplication().getPlaybackManager();
+        playbackManager.playPrevious();
+        updateFromCurrentTrack(playbackManager);
+    }
+
+    private void updateFromCurrentTrack(final PlaybackManager playbackManager) {
+        final PlaylistItem currentTrack = playbackManager.getCurrentTrack();
+        if (currentTrack != null) {
+            updateMeta(currentTrack.getSummaryMultimediaItem().getTitle(), currentTrack
+                    .getSummaryMultimediaItem().getSummaryImage().getConcreteImages().get(0)
+                    .getMediaLink().getHref());
+        }
     }
 
     @OnClick(R.id.play)
