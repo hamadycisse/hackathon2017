@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.fasterxml.jackson.core.JsonFactory;
 
+import hackathon.rc.ca.hackathon.client.BingAuthApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.BingSpeechApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.NeuroApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.ValidationMediaApiServiceInterface;
@@ -22,6 +23,12 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
  */
 
 public class App extends Application {
+
+    private BingAuthApiServiceInterface mBingAuthApiService;
+
+    public BingAuthApiServiceInterface getBingAuthApiService() {
+        return mBingAuthApiService;
+    }
 
     private NeuroApiServiceInterface mNeuroApiService;
 
@@ -72,8 +79,15 @@ public class App extends Application {
         mBingSpeechApiService = retrofitBingSpeech
                 .create(BingSpeechApiServiceInterface.class);
 
+        Retrofit retrofitBingAuth = new Retrofit.Builder()
+                .baseUrl("https://api.cognitive.microsoft.com/")
+                .addConverterFactory(factory)
+                .build();
+
+        mBingAuthApiService = retrofitBingAuth.create(BingAuthApiServiceInterface.class);
+
         mPlaybackManager = new PlaybackManager(getApplicationContext(),
-                mValidationMediaApiService, mBingSpeechApiService);
+                mValidationMediaApiService, mBingSpeechApiService, mBingAuthApiService);
     }
 
 
