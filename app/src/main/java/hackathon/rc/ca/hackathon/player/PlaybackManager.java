@@ -40,6 +40,7 @@ import hackathon.rc.ca.hackathon.client.BingSpeechApiServiceInterface;
 import hackathon.rc.ca.hackathon.client.ValidationMediaApiServiceInterface;
 import hackathon.rc.ca.hackathon.dtos.Playlist;
 import hackathon.rc.ca.hackathon.dtos.PlaylistItem;
+import hackathon.rc.ca.hackathon.dtos.SummaryMultimediaItem;
 import hackathon.rc.ca.hackathon.dtos.ValidationMedia;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -102,6 +103,18 @@ public class PlaybackManager {
 
         mPlaylistManager = new PlaylistManager(playlist.getItems());
 
+        if (!mPlaylistManager.hasNextTrack()) {
+            return;
+        }
+
+        final PlaylistItem currentTrack = mPlaylistManager.getCurrentTrack();
+        final String futureId = currentTrack
+                .getSummaryMultimediaItem().getFutureId();
+
+        loadMedia(currentTrack.getSummaryMultimediaItem().getTitle(), futureId);
+    }
+
+    private void loadMedia(final String trackTitle, final String futureId) {
         final Capture<String> infoFilePath = new Capture<>();
 
         Task.callInBackground(new Callable<ValidationMedia>() {
@@ -110,7 +123,7 @@ public class PlaybackManager {
                 final String textToConvert = String.format("<speak version='1.0' " +
                         "xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Male' name='Microsoft Server Speech Text to Speech Voice (fr-FR, Paul, Apollo)'>%s</voice></speak>"
                         //"xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)'>%s</voice></speak>"
-                        , playlist.getTitle());
+                        , trackTitle);
                 if (mToken == null || TextUtils.isEmpty(mToken) || (SystemClock
                         .uptimeMillis() - mTokenTimeStamp) >= TOKEN_DURATION_MS) {
                     final Call<ResponseBody> jwtCall = mBingAuthApiService.getToken();
@@ -123,8 +136,6 @@ public class PlaybackManager {
                         .getAudio(mToken, requestBody);
                 final Response<ResponseBody> infoAudio = infoAudioCall.execute();
                 final ResponseBody body = infoAudio.body();
-                final String futureId = playlist.getItems().get(1)
-                        .getSummaryMultimediaItem().getFutureId();
                 File file = new File(mApplicationContext.getCacheDir(), futureId);
                 if (file.exists() && file.delete()) {
                 }
@@ -214,6 +225,24 @@ public class PlaybackManager {
             return null;
         }
         return mPlaylistManager.getCurrentTrack();
+    }
+
+    public void playNext() {
+        if (mPlaylistManager == null || !mPlaylistManager.hasNextTrack()) {
+            return;
+        }
+        final PlaylistItem nextTrack = mPlaylistManager.getNextTrack();
+        final SummaryMultimediaItem summaryMultimediaItem = nextTrack.getSummaryMultimediaItem();
+        loadMedia(summaryMultimediaItem.getTitle(), summaryMultimediaItem.getFutureId());
+    }
+
+    public void playPrevious() {
+        if (mPlaylistManager == null || !mPlaylistManager.hasPreviousTrack()) {
+            return;
+        }
+        final PlaylistItem nextTrack = mPlaylistManager.getPreviousTrack();
+        final SummaryMultimediaItem summaryMultimediaItem = nextTrack.getSummaryMultimediaItem();
+        loadMedia(summaryMultimediaItem.getTitle(), summaryMultimediaItem.getFutureId());
     }
 
     private class MyEventListener implements ExtractorMediaSource.EventListener,

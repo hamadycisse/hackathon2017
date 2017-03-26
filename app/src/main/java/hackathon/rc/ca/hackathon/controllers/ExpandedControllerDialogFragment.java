@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+import hackathon.rc.ca.hackathon.App;
 import hackathon.rc.ca.hackathon.R;
 
 /**
@@ -49,5 +51,29 @@ public class ExpandedControllerDialogFragment extends DialogFragment {
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }
+    }
+
+    @OnClick(R.id.next)
+    public void onNext() {
+        (getApplication()).getPlaybackManager().playNext();
+    }
+
+    @OnClick(R.id.previous)
+    public void onPrevious() {
+        (getApplication()).getPlaybackManager().playPrevious();
+    }
+
+    @OnClick(R.id.play)
+    public void onPlay() {
+        (getApplication()).getPlaybackManager().resume();
+    }
+
+    @OnClick(R.id.pause)
+    public void onPlayerPause() {
+        getApplication().getPlaybackManager().pause();
+    }
+
+    private App getApplication() {
+        return (App)getActivity().getApplication();
     }
 }
